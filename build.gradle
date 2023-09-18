@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group 'org.example'
@@ -26,14 +25,9 @@ test {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'org.example.Main' // Змінено на ваш пакет тут
+        attributes 'Main-Class': 'org.example.Main'
     }
-}
-
-shadowJar {
-    archiveFileName = 'myname' // Замініть на бажану назву JAR файлу
-    version = null
-    configurations = [project.configurations.runtimeClasspath]
-
-
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
